@@ -24,7 +24,6 @@ public class FriendsFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// use different layout definition, depending on whether device is pre-
 		// or post-honeycomb
 

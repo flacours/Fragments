@@ -1,6 +1,7 @@
 package course.labs.fragmentslab;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,12 +10,14 @@ public class MainActivity extends Activity implements
 		FriendsFragment.SelectionListener {
 
 	private static final String TAG = "Lab-Fragments";
-
+    private static final boolean mDebug = false;
 	private FriendsFragment mFriendsFragment;
 	private FeedFragment mFeedFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        if(mDebug) Log.i(TAG, "onCreate");
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 
@@ -22,22 +25,23 @@ public class MainActivity extends Activity implements
 		// and add it to the Activity
 
 		if (!isInTwoPaneMode()) {
-			
+            if(mDebug) Log.i(TAG, "onCreate add fragment");
 			mFriendsFragment = new FriendsFragment();
 
-			//TODO 1 - add the FriendsFragment to the fragment_container
-			
-			
-			
-
-		} else {
+			// - add the FriendsFragment to the fragment_container
+			FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, new FriendsFragment());
+            fragmentTransaction.commit();
+            if(mDebug) Log.i(TAG, "onCreate commit");
+        } else {
 
 			// Otherwise, save a reference to the FeedFragment for later use
 
 			mFeedFragment = (FeedFragment) getFragmentManager()
 					.findFragmentById(R.id.feed_frag);
 		}
-
+        if(mDebug) Log.i(TAG, "onCreate finished");
 	}
 
 	// If there is no fragment_container ID, then the application is in
@@ -64,14 +68,15 @@ public class MainActivity extends Activity implements
 
 		if (!isInTwoPaneMode()) {
 
-			//TODO 2 - replace the fragment_container with the FeedFragment
-			
-
-			
+			// - replace the fragment_container with the FeedFragment
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, mFeedFragment);
+            fragmentTransaction.addToBackStack(null);
+			fragmentTransaction.commit();
 
 			// execute transaction now
 			getFragmentManager().executePendingTransactions();
-
 		}
 
 		// Update Twitter feed display on FriendFragment
